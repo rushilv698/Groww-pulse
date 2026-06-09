@@ -6,3 +6,4 @@ flask
 google-play-scraper
 app-store-scraper
 gunicorn
+urllib3<2
