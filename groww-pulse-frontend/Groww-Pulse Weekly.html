@@ -708,8 +708,13 @@ async function generateAndSendPulse(email) {
     body: JSON.stringify({ email })
   });
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.error || await res.text());
+    const text = await res.text();
+    let errorMsg = text;
+    try {
+      const data = JSON.parse(text);
+      if (data.error) errorMsg = data.error;
+    } catch(e) {}
+    throw new Error(errorMsg);
   }
   const result = await res.json();
   
