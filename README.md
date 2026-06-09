@@ -97,3 +97,14 @@ PII means personally identifiable information, such as names, emails, phone numb
 - Theme counts are model-generated and should be spot-checked for high-stakes reporting.
 - Email sending requires valid SMTP credentials and a Gmail app password when using Gmail.
 - The sample CSV is synthetic but realistic; replace it with real public exports for production use.
+
+## Deployment on Railway
+
+This project is configured to run effortlessly on Railway out of the box.
+
+1. Create a new project on [Railway](https://railway.app/).
+2. Select **Deploy from GitHub repo** and connect your `Groww-pulse` repository.
+3. Railway will automatically detect the Python environment from `requirements.txt`.
+4. Go to the **Variables** tab in your Railway service and add all the environment variables from your `.env` file (e.g., `Groww_weekly_review_GROQ`, `SMTP_SERVER`, `SENDER_EMAIL`, etc.).
+5. The included `Procfile` will automatically launch the Flask frontend using `gunicorn`. 
+6. Once deployed, Railway will provide you with a public URL where you can access the frontend dashboard!

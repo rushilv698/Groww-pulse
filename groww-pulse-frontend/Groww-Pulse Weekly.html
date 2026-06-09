@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Groww-Pulse Weekly — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green: #00b386;
+    --green-bright: #00d09c;
+    --green-dark: #00946e;
+    --green-tint: #e3f9f1;
+    --green-tint-2: #eafbf6;
+    --ink: #121828;
+    --secondary: #44475b;
+    --muted: #687083;
+    --faint: #9aa3b2;
+    --border: #eceff3;
+    --border-2: #e6eaf0;
+    --app-bg: #fafbfc;
+    --error: #ff4d4f;
+    --blue: #2a6fdb;
+    --card: #ffffff;
+    --surface-2: #fafbfc;
+    --chip-bg: #f6f7f9;
+    --danger-tint: #ffeaea;
+    --green-border: #c8f0e2;
+    --shadow-card: 0 1px 2px rgba(16,24,40,.04), 0 8px 28px rgba(16,24,40,.06);
+    --shadow-soft: 0 2px 14px rgba(16,24,40,.05);
+  }
+  html[data-theme="dark"] {
+    --green: #00c993;
+    --green-bright: #00d09c;
+    --green-dark: #57e0bd;
+    --green-tint: rgba(0,208,156,.16);
+    --green-tint-2: rgba(0,208,156,.13);
+    --ink: #f3f6fb;
+    --secondary: #b3bcca;
+    --muted: #8b94a4;
+    --faint: #6b7484;
+    --border: #232a36;
+    --border-2: #2c3340;
+    --app-bg: #0b0e13;
+    --error: #ff6b6d;
+    --blue: #6ea8ff;
+    --card: #141922;
+    --surface-2: #1b212b;
+    --chip-bg: #1e242f;
+    --danger-tint: rgba(255,77,79,.16);
+    --green-border: rgba(0,208,156,.34);
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.45);
+    --shadow-soft: 0 2px 14px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--app-bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font-family: inherit; }
+  a { color: inherit; }
+
+  .screen { min-height: 100vh; display: flex; flex-direction: column; }
+  .hidden { display: none !important; }
+
+  /* ---------- buttons ---------- */
+  .btn-primary {
+    background: var(--green); color: #fff; font-weight: 600; font-size: 15px;
+    border-radius: 999px; padding: 14px 22px; display: inline-flex; align-items: center;
+    justify-content: center; gap: 10px;
+    transition: background .15s, transform .1s, box-shadow .15s;
+    box-shadow: 0 6px 16px rgba(0,179,134,.22);
+  }
+  .btn-primary:hover { background: #009e76; }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:disabled { background: #b7e7d8; box-shadow: none; cursor: not-allowed; }
+  .btn-block { width: 100%; height: 52px; }
+  .btn-lg { height: 56px; font-size: 16px; }
+
+  .btn-outline {
+    background: var(--card); color: var(--secondary); font-weight: 600; font-size: 14px;
+    border: 1.5px solid var(--border-2); border-radius: 999px; padding: 9px 18px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .btn-outline:hover { border-color: #cdd4de; background: var(--surface-2); }
+
+  .theme-toggle {
+    width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border-2);
+    background: var(--card); color: var(--secondary); display: flex; align-items: center;
+    justify-content: center; transition: background .15s, border-color .15s, color .15s;
+  }
+  .theme-toggle:hover { border-color: var(--green); color: var(--green); background: var(--green-tint); }
+
+  .link-back { color: var(--muted); font-size: 14px; font-weight: 500; padding: 6px 4px; }
+  .link-back:hover { color: var(--ink); }
+
+  .proto-note {
+    display: flex; align-items: center; gap: 7px; color: var(--faint);
+    font-size: 12.5px; font-weight: 500; justify-content: center;
+  }
+  .foot { padding: 22px; border-top: 1px solid var(--border); margin-top: auto; }
+
+  /* ===================== LOGIN ===================== */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 26px; max-width: 1100px; width: 100%; margin: 0 auto;
+  }
+  .login-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-card {
+    width: 100%; max-width: 440px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; padding: 44px 40px; box-shadow: var(--shadow-card);
+    display: flex; flex-direction: column;
+  }
+  .login-logo {
+    display: flex; align-items: center; justify-content: center; gap: 11px; margin-bottom: 26px;
+  }
+  .login-logo .brand { display: flex; align-items: baseline; gap: 2px; }
+  .login-logo .brand-name { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .login-logo .brand-suffix { font-size: 26px; font-weight: 700; color: var(--green); letter-spacing: -0.02em; }
+  .pulse-tag {
+    display: inline-flex; align-items: center; gap: 6px; align-self: center;
+    background: var(--green-tint); color: var(--green-dark);
+    font-size: 11.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px;
+    margin-bottom: 22px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .login-title { font-size: 26px; font-weight: 700; text-align: center; color: var(--ink); }
+  .login-sub { font-size: 14.5px; color: var(--muted); text-align: center; margin-top: 8px; line-height: 1.5; max-width: 320px; align-self: center; }
+
+  .field-label { font-size: 13.5px; font-weight: 600; color: var(--secondary); margin: 30px 0 9px; }
+  .phone-field {
+    display: flex; align-items: center; border: 1.5px solid var(--border-2); border-radius: 12px;
+    overflow: hidden; transition: border-color .15s;
+  }
+  .phone-field.ok { border-color: var(--green); }
+  .phone-field.err { border-color: var(--error); }
+  .phone-cc {
+    display: flex; align-items: center; gap: 7px; padding: 0 13px; height: 52px;
+    border-right: 1px solid var(--border-2); font-size: 15px; font-weight: 600; color: var(--ink);
+    background: var(--surface-2);
+  }
+  .phone-field input {
+    flex: 1; height: 52px; border: none; outline: none; padding: 0 16px; font-size: 15.5px; color: var(--ink); background: transparent;
+  }
+  .phone-field input::placeholder { color: var(--faint); font-weight: 400; }
+
+  .err-msg {
+    display: flex; align-items: center; gap: 6px; margin-top: 10px;
+    color: var(--error); font-size: 13px; font-weight: 500;
+  }
+
+  .login-card .btn-primary { margin-top: 20px; }
+
+  .secure-note { display: flex; align-items: center; gap: 7px; justify-content: center; margin-top: 22px; color: var(--muted); font-size: 12.5px; }
+
+  /* ===================== DASHBOARD ===================== */
+  .dash-header {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 14px 0; flex-shrink: 0;
+  }
+  .dash-header-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand-lockup { display: flex; align-items: center; gap: 10px; }
+  .brand-lockup .name {
+    font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
+  }
+  .brand-lockup .name .accent { color: var(--green); }
+  .brand-lockup .sub {
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    background: var(--chip-bg); padding: 3px 9px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 6px 14px 6px 8px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; color: var(--secondary);
+  }
+  .user-pill .av {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--green-tint);
+    color: var(--green-dark); display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+
+  .dash-main {
+    flex: 1; max-width: 1080px; margin: 0 auto; padding: 44px 28px 52px;
+    display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 36px; align-items: start; width: 100%;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green-tint); color: var(--green-dark);
+    font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px;
+  }
+  .hero-title {
+    font-size: 44px; line-height: 1.08; font-weight: 800; letter-spacing: -0.025em;
+    color: var(--ink); text-wrap: balance;
+  }
+  .hero-title .accent { color: var(--green); }
+  .hero-sub {
+    font-size: 16px; line-height: 1.6; color: var(--secondary);
+    margin-top: 16px; max-width: 520px; text-wrap: pretty;
+  }
+
+  .features {
+    display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 28px;
+  }
+  .feature {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 18px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .feature-icon {
+    width: 38px; height: 38px; border-radius: 10px; background: var(--green-tint);
+    color: var(--green-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .feature-title { font-size: 14.5px; font-weight: 700; color: var(--ink); }
+  .feature-body { font-size: 13.5px; line-height: 1.55; color: var(--muted); margin-top: 3px; }
+
+  /* ---------- action card ---------- */
+  .action-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    padding: 28px; box-shadow: var(--shadow-card);
+    position: sticky; top: 24px;
+  }
+  .action-card h2 {
+    font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em;
+  }
+  .action-card .sub {
+    font-size: 13.5px; color: var(--muted); margin-top: 6px; line-height: 1.5;
+  }
+  .email-field {
+    display: flex; align-items: center; border: 1.5px solid var(--border-2); border-radius: 12px;
+    margin-top: 22px; transition: border-color .15s, box-shadow .15s; background: var(--card);
+  }
+  .email-field:focus-within { border-color: var(--green); box-shadow: 0 0 0 4px rgba(0,179,134,.08); }
+  .email-icon { padding: 0 14px 0 16px; color: var(--faint); display: flex; align-items: center; }
+  .email-field input {
+    flex: 1; height: 52px; border: none; outline: none;
+    font-size: 15px; color: var(--ink); background: transparent; padding-right: 16px;
+  }
+  .email-field input::placeholder { color: var(--faint); }
+
+  .action-meta {
+    display: flex; align-items: center; gap: 8px; margin-top: 14px;
+    font-size: 12.5px; color: var(--muted);
+  }
+  .action-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--faint); }
+
+  .send-btn { margin-top: 20px; }
+
+  /* status states */
+  .status {
+    margin-top: 18px; padding: 14px 16px; border-radius: 12px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13.5px; line-height: 1.5;
+    animation: rise .25s ease both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .status.loading {
+    background: var(--green-tint-2); border: 1px solid var(--green-border); color: var(--green-dark);
+    font-weight: 600;
+  }
+  .status.success {
+    background: var(--green-tint); border: 1px solid var(--green-border); color: var(--green-dark);
+    font-weight: 600;
+  }
+  .status.error {
+    background: var(--danger-tint); border: 1px solid rgba(255,77,79,.3); color: var(--error);
+    font-weight: 600;
+  }
+  .status .ico { flex-shrink: 0; display: flex; }
+
+  .dots { display: inline-flex; gap: 4px; align-items: center; }
+  .dots span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.2s infinite both; }
+  .dots span:nth-child(2) { animation-delay: .2s; }
+  .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; transform: scale(.8); } 40% { opacity: 1; transform: scale(1); } }
+
+  /* preview card */
+  .preview {
+    margin-top: 22px; border: 1px dashed var(--border-2); border-radius: 14px;
+    padding: 16px 18px; background: var(--surface-2);
+  }
+  .preview-label {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11.5px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 11px;
+  }
+  .preview-subject { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .preview-from { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .preview-list { display: flex; flex-direction: column; gap: 8px; }
+  .preview-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--secondary); font-weight: 500;
+  }
+  .preview-bullet {
+    flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px;
+    background: var(--card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10.5px; font-weight: 700; color: var(--green-dark);
+  }
+  .preview-item .tag {
+    margin-left: auto; font-size: 10.5px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px; background: var(--green-tint); color: var(--green-dark);
+  }
+  .preview-item .tag.warn { background: rgba(255,153,51,.15); color: #c46a00; }
+  .preview-item .tag.neg { background: var(--danger-tint); color: var(--error); }
+  html[data-theme="dark"] .preview-item .tag.warn { background: rgba(255,153,51,.22); color: #ffa64d; }
+
+  /* responsive */
+  @media (max-width: 880px) {
+    .dash-main { grid-template-columns: 1fr; gap: 28px; padding: 32px 22px 44px; }
+    .action-card { position: static; }
+    .hero-title { font-size: 36px; }
+  }
+  @media (max-width: 560px) {
+    .nav, .dash-header-inner { padding-left: 18px; padding-right: 18px; }
+    .login-card { padding: 34px 24px; }
+    .hero-title { font-size: 30px; }
+    .user-pill .label { display: none; }
+    .user-pill { padding: 5px; }
+    .brand-lockup .sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div class="screen" id="screen-login">
+  <header class="nav">
+    <span></span>
+    <button class="theme-toggle" id="theme-toggle-login" aria-label="Toggle dark mode">
+      <svg class="ic-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    </button>
+  </header>
+
+  <main class="login-main">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="assets/groww-logo.png" alt="Groww" width="48" height="48" />
+        <div class="brand">
+          <span class="brand-name">Groww</span><span class="brand-suffix">-Pulse</span>
+        </div>
+      </div>
+      <span class="pulse-tag">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Weekly Review Digest
+      </span>
+
+      <h2 class="login-title">Sign in to continue</h2>
+      <p class="login-sub">Internal tool. Enter your authorized mobile number to access the pulse generator.</p>
+
+      <label class="field-label">Mobile number</label>
+      <div class="phone-field" id="phone-field">
+        <div class="phone-cc">
+          <svg width="20" height="14" viewBox="0 0 30 21" style="border-radius:3px;display:block;">
+            <rect width="30" height="7" y="0" fill="#FF9933"></rect>
+            <rect width="30" height="7" y="7" fill="#fff"></rect>
+            <rect width="30" height="7" y="14" fill="#138808"></rect>
+            <circle cx="15" cy="10.5" r="2.2" fill="none" stroke="#0a0a8c" stroke-width="0.5"></circle>
+          </svg>
+          <span>+91</span>
+        </div>
+        <input id="phone-input" type="tel" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit number" autocomplete="off" />
+      </div>
+      <div class="err-msg hidden" id="phone-err">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4M12 16h.01"></path></svg>
+        <span>Unauthorized user. Please enter a valid 10-digit mobile number.</span>
+      </div>
+
+      <button class="btn-primary btn-block" id="login-btn" disabled>Continue</button>
+
+      <div class="secure-note">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>Mock auth — any 10-digit number works in this prototype.</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="proto-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+      <span>This is a prototype, not affiliated with or supported by Groww.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== DASHBOARD SCREEN ===================== -->
+<div class="screen hidden" id="screen-dash">
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <div class="brand-lockup">
+        <img src="assets/groww-logo.png" alt="Groww" width="32" height="32" />
+        <div class="name">Groww<span class="accent">-Pulse</span></div>
+        <span class="sub">Weekly</span>
+      </div>
+      <div class="header-right">
+        <div class="user-pill">
+          <div class="av" id="user-avatar">PM</div>
+          <span class="label" id="user-label">+91 •••• ••••</span>
+        </div>
+        <button class="theme-toggle" id="theme-toggle-dash" aria-label="Toggle dark mode">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        </button>
+        <button class="btn-outline" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dash-main">
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Voice-of-customer, automated
+      </div>
+      <h1 class="hero-title">
+        The week in app reviews,<br />
+        <span class="accent">summarized for you.</span>
+      </h1>
+      <p class="hero-sub">
+        Groww-Pulse reads the last seven days of Play Store and App Store reviews, extracts the top recurring themes with an LLM, and ships a one-page summary straight to your inbox.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 4 4 5-6"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Top themes, ranked</div>
+            <div class="feature-body">The LLM clusters reviews into 5–7 themes and orders them by mention volume and sentiment.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">One-page summary</div>
+            <div class="feature-body">No dashboards to open. A scannable email with quotes, counts, and week-over-week deltas.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          </div>
+          <div>
+            <div class="feature-title">Delivered on demand</div>
+            <div class="feature-body">Trigger a fresh pulse any time — or wire it to a cron for Monday morning delivery.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="action-card">
+      <h2>Generate this week's pulse</h2>
+      <p class="sub">Enter where to send the digest. The script will pull recent reviews, ask the LLM for themes, and email the summary.</p>
+
+      <div class="email-field" id="email-field">
+        <span class="email-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        </span>
+        <input id="email-input" type="email" placeholder="you@groww.in" autocomplete="email" />
+      </div>
+
+      <div class="action-meta">
+        <span>Reviews from last 7 days</span>
+        <span class="dot"></span>
+        <span>Sent via SMTP</span>
+        <span class="dot"></span>
+        <span>~20s</span>
+      </div>
+
+      <button class="btn-primary btn-block btn-lg send-btn" id="send-btn" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <span>Generate &amp; Send Pulse</span>
+      </button>
+
+      <div id="status-slot"></div>
+
+      <div class="preview">
+        <div class="preview-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          What you'll receive
+        </div>
+        <div class="preview-subject">Groww-Pulse · Week 23 · 1,284 reviews analyzed</div>
+        <div class="preview-from">From pulse@groww.in · Mon, 9:00 AM</div>
+        <div class="preview-list">
+          <div class="preview-item"><span class="preview-bullet">1</span><span>Order placement lag on F&amp;O screen</span><span class="tag neg">312 ↑</span></div>
+          <div class="preview-item"><span class="preview-bullet">2</span><span>Mutual fund SIP setup confusion</span><span class="tag warn">187 ↑</span></div>
+          <div class="preview-item"><span class="preview-bullet">3</span><span>UPI mandate auto-debit failures</span><span class="tag neg">142 →</span></div>
+          <div class="preview-item"><span class="preview-bullet">4</span><span>Praise for new portfolio analytics</span><span class="tag">96 ↑</span></div>
+          <div class="preview-item"><span class="preview-bullet">5</span><span>Biometric login rollout reception</span><span class="tag">71 ↑</span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <div class="proto-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+      <span>Prototype UI · plug your <code style="font-family:ui-monospace,Menlo,monospace;background:var(--chip-bg);padding:1px 6px;border-radius:4px;font-size:11.5px;">pulse.py</code> into the <code style="font-family:ui-monospace,Menlo,monospace;background:var(--chip-bg);padding:1px 6px;border-radius:4px;font-size:11.5px;">generateAndSendPulse()</code> hook.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   Groww-Pulse Weekly — Prototype frontend logic
+   ---------------------------------------------------------
+   Backend integration point: see generateAndSendPulse() at
+   the bottom of this script. Replace the mock with a fetch()
+   to your Flask/FastAPI endpoint that wraps pulse.py.
+   ========================================================= */
+
+// ---------- theme ----------
+const THEME_KEY = 'pulse-theme';
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+try { applyTheme(localStorage.getItem(THEME_KEY) || 'light'); } catch (e) {}
+document.getElementById('theme-toggle-login').addEventListener('click', toggleTheme);
+document.getElementById('theme-toggle-dash').addEventListener('click', toggleTheme);
+
+// ---------- screen routing ----------
+const screens = {
+  login: document.getElementById('screen-login'),
+  dash:  document.getElementById('screen-dash'),
+};
+function show(name) {
+  Object.entries(screens).forEach(([k, el]) => el.classList.toggle('hidden', k !== name));
+  window.scrollTo(0, 0);
+}
+
+// ---------- LOGIN ----------
+const phoneInput = document.getElementById('phone-input');
+const phoneField = document.getElementById('phone-field');
+const phoneErr   = document.getElementById('phone-err');
+const loginBtn   = document.getElementById('login-btn');
+
+function isValidPhone(v) { return /^\d{10}$/.test(v); }
+
+phoneInput.addEventListener('input', () => {
+  // strip non-digits, cap 10
+  const v = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+  phoneInput.value = v;
+  const ok = isValidPhone(v);
+  phoneField.classList.toggle('ok', ok);
+  phoneField.classList.remove('err');
+  phoneErr.classList.add('hidden');
+  loginBtn.disabled = !ok;
+});
+
+phoneInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    attemptLogin();
+  }
+});
+
+function attemptLogin() {
+  const v = phoneInput.value.replace(/\D/g, '');
+  // === MOCK AUTH ===
+  // Authorized user = exactly 10 digits. Replace with real check.
+  if (!isValidPhone(v)) {
+    phoneField.classList.add('err');
+    phoneField.classList.remove('ok');
+    phoneErr.classList.remove('hidden');
+    return;
+  }
+  // success — populate user pill, switch to dashboard
+  document.getElementById('user-label').textContent = '+91 ' + v.slice(0, 5) + ' ' + v.slice(5);
+  document.getElementById('user-avatar').textContent = v.slice(-2);
+  show('dash');
+}
+
+loginBtn.addEventListener('click', attemptLogin);
+
+// ---------- SIGN OUT ----------
+document.getElementById('signout-btn').addEventListener('click', () => {
+  phoneInput.value = '';
+  phoneField.classList.remove('ok', 'err');
+  phoneErr.classList.add('hidden');
+  loginBtn.disabled = true;
+  document.getElementById('email-input').value = '';
+  document.getElementById('send-btn').disabled = true;
+  setStatus(null);
+  show('login');
+  setTimeout(() => phoneInput.focus(), 50);
+});
+
+// ---------- DASHBOARD: email + send ----------
+const emailInput = document.getElementById('email-input');
+const sendBtn    = document.getElementById('send-btn');
+const statusSlot = document.getElementById('status-slot');
+
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+emailInput.addEventListener('input', () => {
+  sendBtn.disabled = !isValidEmail(emailInput.value.trim());
+});
+
+emailInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !sendBtn.disabled) sendBtn.click();
+});
+
+sendBtn.addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  if (!isValidEmail(email)) return;
+  sendBtn.disabled = true;
+  setStatus('loading', 'Analyzing reviews and drafting email…');
+  try {
+    const result = await generateAndSendPulse(email);
+    setStatus('success', `Pulse sent to <b>${escapeHtml(email)}</b>. Check your inbox in a minute.`, result);
+  } catch (err) {
+    setStatus('error', `Something went wrong: ${escapeHtml(err && err.message || String(err))}`);
+    sendBtn.disabled = false;
+  }
+});
+
+function setStatus(kind, text, _data) {
+  if (!kind) { statusSlot.innerHTML = ''; return; }
+  if (kind === 'loading') {
+    statusSlot.innerHTML = `
+      <div class="status loading">
+        <span class="ico"><span class="dots"><span></span><span></span><span></span></span></span>
+        <span>${text}</span>
+      </div>`;
+  } else if (kind === 'success') {
+    statusSlot.innerHTML = `
+      <div class="status success">
+        <span class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <span>${text}</span>
+      </div>`;
+    // re-enable for follow-up sends
+    setTimeout(() => { sendBtn.disabled = !isValidEmail(emailInput.value.trim()); }, 400);
+  } else if (kind === 'error') {
+    statusSlot.innerHTML = `
+      <div class="status error">
+        <span class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </span>
+        <span>${text}</span>
+      </div>`;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* =========================================================
+   BACKEND HOOK
+   ---------------------------------------------------------
+   Replace this mock with a real call to your backend, e.g.:
+
+     async function generateAndSendPulse(email) {
+       const res = await fetch('/api/pulse', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ email })
+       });
+       if (!res.ok) throw new Error(await res.text());
+       return res.json();
+     }
+
+   On the Python side wire it to pulse.py:
+
+     # app.py (Flask)
+     from flask import Flask, request, jsonify
+     from pulse import generate_pulse, send_email   # your existing fns
+
+     app = Flask(__name__)
+
+     @app.post('/api/pulse')
+     def pulse():
+         email = (request.get_json() or {}).get('email')
+         summary = generate_pulse()                 # LLM step
+         send_email(to=email, body=summary)         # SMTP step
+         return jsonify({'ok': True})
+   ========================================================= */
+async function generateAndSendPulse(email) {
+  const res = await fetch('/api/pulse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || await res.text());
+  }
+  const result = await res.json();
+  
+  if (result.note) {
+    updatePreviewBox(result);
+  }
+  
+  return result;
+}
+
+function updatePreviewBox(result) {
+    // dynamically update the preview box
+    const themesMatch = result.note.match(/TOP THEMES[\s\S]*?(?=QUOTES)/);
+    if (themesMatch) {
+      const lines = themesMatch[0].split(/\r?\n/).filter(l => l.trim().startsWith('-'));
+      let html = '';
+      lines.forEach((line, i) => {
+        let title = line.replace(/^- /, '').split(':')[0].trim();
+        let count = '';
+        const countMatch = title.match(/\((\d+)\s*reviews?\)/i);
+        if(countMatch) {
+            count = countMatch[1] + ' ↑';
+            title = title.replace(/\(.*?\)/, '').trim();
+        }
+        html += `<div class="preview-item"><span class="preview-bullet">${i+1}</span><span>${escapeHtml(title)}</span><span class="tag">${count}</span></div>`;
+      });
+      
+      const d = new Date();
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+
+      document.querySelector('.preview-list').innerHTML = html;
+      document.querySelector('.preview-subject').textContent = `Groww-Pulse · Week ${weekNo} · ${result.count} reviews analyzed`;
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('/api/latest');
+    const result = await res.json();
+    if (result.ok && result.note) {
+      updatePreviewBox(result);
+    }
+  } catch (err) {
+    console.error("Failed to load initial pulse data:", err);
+  }
+});
+
+function escapeHtml(unsafe) {
+    return (unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// autofocus phone on first load
+phoneInput.focus();
+</script>
+</body>
+</html>

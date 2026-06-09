@@ -121,9 +121,11 @@ def enforce_exact_quotes(weekly_note, reviews_df):
 
 
 def generate_weekly_note(reviews_df):
-    date_range = (
-        f"{reviews_df['date'].min().date()} to {reviews_df['date'].max().date()}"
-    )
+    from datetime import datetime, timedelta
+    today = datetime.now()
+    monday = today - timedelta(days=today.weekday())
+    sunday = monday + timedelta(days=6)
+    date_range = f"{monday.date()} to {sunday.date()}"
     reviews_text = build_reviews_text(reviews_df)
     review_count = len(reviews_df)
 
@@ -137,7 +139,7 @@ Rules:
 - In the final note, show exactly the top 3 themes by review count.
 - Do not show Theme 4 or Theme 5 in the final note.
 - If the review volume is small, use fewer than 5 themes rather than inventing extra categories.
-- Use specific product themes such as KYC/Onboarding, Payments/Refunds, Withdrawals, SIP/Orders, App Stability, Statements/Reports, Support, or Notifications.
+- Use ONLY these specific 5 product themes: KYC/Onboarding, Payments/Refunds, Withdrawals, Statements/Reports.
 - Do not use broad umbrella themes such as Technical Issues, User Experience, or General Feedback.
 - For each theme, include the count of reviews that belong to it.
 - Select three distinct, real user quotes taken exactly from the review text.
@@ -230,24 +232,25 @@ def save_draft(subject, opening_summary, weekly_note, path="draft_email.txt"):
     print(f"Draft saved to {path}")
 
 
-def send_email(weekly_note, opening_summary):
+def send_email(weekly_note, opening_summary, override_recipient=None):
     subject = "Groww Weekly Review Pulse - " + pd.Timestamp.now().strftime("%Y-%m-%d")
     body = f"""
     <p>Hi,</p>
     <p>{opening_summary.replace(chr(10), '<br>')}</p>
     <p>Here is the weekly review pulse for Groww:</p>
     <pre>{weekly_note}</pre>
-    <p><i>Generated automatically. No PII included.</i></p>
+    <p><i>Generated automatically - Project prototype. No PII included.</i></p>
     """
 
-    if not all([SMTP_SERVER, SMTP_PORT, SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL]):
+    recipient = override_recipient or RECIPIENT_EMAIL
+    if not all([SMTP_SERVER, SMTP_PORT, SENDER_EMAIL, SENDER_PASSWORD, recipient]):
         print("Email credentials are incomplete. Saving a local draft instead.")
         save_draft(subject, opening_summary, weekly_note)
         return
 
     msg = MIMEMultipart()
     msg["From"] = SENDER_EMAIL
-    msg["To"] = RECIPIENT_EMAIL
+    msg["To"] = recipient
     msg["Subject"] = subject
     msg.attach(MIMEText(body, "html"))
 
@@ -255,12 +258,21 @@ def send_email(weekly_note, opening_summary):
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
+        server.sendmail(SENDER_EMAIL, recipient, msg.as_string())
         server.quit()
         print("Email sent successfully.")
     except Exception as exc:
         print(f"Failed to send email: {exc}")
         save_draft(subject, opening_summary, weekly_note)
+
+
+def run_pulse(recipient_email=None):
+    df = load_reviews()
+    weekly_note = generate_weekly_note(df)
+    opening_summary = build_email_opening(weekly_note)
+    save_weekly_note(weekly_note, opening_summary)
+    send_email(weekly_note, opening_summary, override_recipient=recipient_email)
+    return weekly_note, opening_summary, len(df)
 
 
 def main():

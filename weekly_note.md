@@ -1,15 +1,15 @@
 EMAIL OPENING SUMMARY
-This week's Groww review pulse highlights KYC/onboarding issues as the main signal, with users experiencing significant pain points due to document upload and verification problems.
-The biggest user complaint revolves around the difficulty in completing the onboarding process, with multiple reviews citing issues with PAN and address verification.
-To address this, our recommended focus for the week is to improve the KYC process through real-time verification and reduced document upload failures.
+This week's Groww review pulse highlights KYC/onboarding issues as the main signal, with users facing significant pain points due to document upload failures and verification delays.
+The biggest user pain point revolves around the inefficiencies in the KYC process, which is causing frustration and hindering the onboarding experience.
+To address this, our recommended focus for the week is to implement a more robust KYC verification process to reduce delays and failures.
 
 WEEKLY GROWW PULSE
-[2026-03-24 to 2026-06-09]
+[2026-06-08 to 2026-06-14]
 
 TOP THEMES
-- KYC/Onboarding (14 reviews): Issues with document upload, verification, and account setup.
-- Payments/Refunds (13 reviews): Problems with UPI payments, failed orders, and refund timelines.
-- SIP/Orders (12 reviews): Difficulties with SIP creation, order status, and cancellation.
+- KYC/Onboarding (23 reviews): Users are facing issues with the KYC process, including document upload failures and verification delays.
+- Payments/Refunds (20 reviews): Customers are experiencing problems with payments, such as failed transactions, missing refunds, and unclear refund timelines.
+- Statements/Reports (15 reviews): Users are finding it difficult to understand and download their account statements, with some requesting clearer risk labels and consolidated statements.
 
 QUOTES
 1. "PAN verification passes but address verification fails every time."
@@ -17,6 +17,6 @@ QUOTES
 3. "Redemption completed in the app but payout is still pending."
 
 ACTION IDEAS
-1. Improve the KYC process by adding real-time verification and reducing document upload failures.
-2. Enhance the payment system to reduce UPI failures and provide clear refund timelines.
-3. Simplify the SIP creation and cancellation process, and provide more transparent order status updates.
+1. Implement a more robust KYC verification process to reduce delays and failures.
+2. Improve payment processing to minimize failed transactions and provide clear refund timelines.
+3. Enhance the statement download feature to include consolidated statements and clearer risk labels.

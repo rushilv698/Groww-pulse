@@ -2,3 +2,7 @@ pandas
 python-dotenv
 langchain
 langchain-groq
+flask
+google-play-scraper
+app-store-scraper
+gunicorn
