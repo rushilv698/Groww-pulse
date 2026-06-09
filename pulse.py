@@ -31,6 +31,9 @@ def get_llm():
 
 
 def load_reviews(csv_path="sample_reviews.csv", lookback_weeks=REVIEW_LOOKBACK_WEEKS):
+    import os
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_dir, csv_path)
     df = pd.read_csv(csv_path)
     for col in ["rating", "title", "text", "date"]:
         if col not in df.columns:
@@ -183,6 +186,9 @@ REVIEWS:
 
 
 def save_weekly_note(weekly_note, opening_summary, path="weekly_note.md"):
+    import os
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_dir, path)
     with open(path, "w", encoding="utf-8") as file:
         file.write("EMAIL OPENING SUMMARY\n")
         file.write(opening_summary + "\n\n")
@@ -227,6 +233,9 @@ WEEKLY NOTE:
 
 
 def save_draft(subject, opening_summary, weekly_note, path="draft_email.txt"):
+    import os
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_dir, path)
     with open(path, "w", encoding="utf-8") as file:
         file.write(f"Subject: {subject}\n\n{opening_summary}\n\n{weekly_note}\n")
     print(f"Draft saved to {path}")
