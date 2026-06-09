@@ -264,7 +264,7 @@ def send_email(weekly_note, opening_summary, override_recipient=None):
     msg.attach(MIMEText(body, "html"))
 
     try:
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, recipient, msg.as_string())
