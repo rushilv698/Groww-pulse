@@ -1,0 +1,70 @@
+rating,title,text,date
+2,"KYC upload failed repeatedly","Document upload reached 100 percent and then failed three times.",2026-03-24
+1,"Payment debited with no order","Money left my bank but the mutual fund order never appeared.",2026-03-27
+3,"Statement filters are limited","I want to filter statements by fund type and financial year in one place.",2026-03-30
+4,"Clean first SIP setup","The first SIP flow was simple and did not feel intimidating.",2026-04-02
+2,"Support ticket has no timeline","The ticket status only says open and does not show the next update time.",2026-04-05
+1,"Withdrawal stuck over a week","Redemption completed in the app but payout is still pending.",2026-04-08
+3,"Notifications need more control","I want only investment alerts, not market tips throughout the day.",2026-04-11
+2,"App freezes after OTP","Login succeeds but the home screen freezes after OTP verification.",2026-04-14
+4,"Portfolio insights are helpful","The allocation view helped me understand where my money is invested.",2026-04-17
+1,"SIP cancellation unclear","The cancellation option is hard to find and the app still shows next debit.",2026-04-19
+2,"KYC stuck for 3 weeks","Submitted documents thrice, still not verified. Support says 'wait 48hrs' every time. Can't invest.",2026-05-20
+4,"Great app but UPI fails often","Mutual fund part is smooth, but UPI payments fail randomly. Loses a few points.",2026-06-01
+5,"Loving the new dashboard","The SIP tracking feature is fantastic. Everything clear and easy to use.",2026-06-05
+1,"Withdrawal request pending 10 days","Requested Rs.50,000 withdrawal. Money not credited. No proper update in app.",2026-05-15
+3,"Confusing statement downloads","Why can't I download a single consolidated statement? I get separate PDFs for each fund.",2026-06-02
+2,"App crashes on stock orders","Every time I place a stock order, the app freezes. Very frustrating.",2026-05-28
+4,"ELSS investment was smooth","Easy process to invest in ELSS. Instant allotment. Happy so far.",2026-05-12
+1,"Wrong NAV shown today","Funds page is showing NAV from last week. Refreshed multiple times. Misleading.",2026-06-07
+5,"Customer support call back was quick","I called about a failed SIP, they called back in 10 mins and resolved it.",2026-05-30
+2,"Too many notifications","Groww sends 5-6 push notifications daily. Very annoying. No way to turn them off.",2026-06-03
+3,"KYC video call never happened","Scheduled video KYC, waited 1 hour, no one showed up. Wasted my time.",2026-05-25
+1,"Money debited, fund not purchased","UPI payment successful but fund order failed. No refund yet.",2026-06-04
+4,"Portfolio view is neat","Love seeing all my funds in one place. Just wish the add-money was faster.",2026-06-01
+2,"SIP pause not working","I tried to pause a SIP, but it still deducted this month. No option to stop.",2026-05-18
+5,"Good for beginners","I started my first mutual fund using Groww. Very simple explanations.",2026-05-10
+2,"Bank mandate setup keeps failing","AutoPay registration failed twice for my SIP. Had to restart the whole process.",2026-04-20
+1,"Refund still not received","Amount got debited for a fund order but there is no allotment and no refund update.",2026-04-22
+3,"App is good but statements are weak","Investing is simple, but account statements are hard to understand and export.",2026-04-24
+5,"Best app for first-time investors","Clean design and easy language. I finally understood SIPs because of this app.",2026-04-26
+2,"Order status unclear","Placed an order and it kept showing processing for hours. No clear explanation.",2026-04-27
+1,"Unable to complete eKYC","PAN verification passes but address verification fails every time.",2026-04-29
+4,"Mutual fund search is useful","The filters for risk and category are actually helpful.",2026-04-30
+2,"Daily app lag","Portfolio page takes too long to load every morning.",2026-05-01
+1,"Withdrawal rejected without reason","Tried to withdraw from liquid fund and app only says request failed.",2026-05-02
+3,"Need better tax reports","Capital gains report is not intuitive and takes too many steps to download.",2026-05-03
+4,"Smooth onboarding for my mother","Setup was easy enough for my mother to start her first SIP.",2026-05-04
+2,"SIP date change did not save","Changed SIP date in the app but old date still got executed.",2026-05-05
+1,"Support chat useless","The bot keeps repeating FAQs and never hands over to a real person.",2026-05-06
+5,"Nice educational cards","The short explainers on funds are genuinely helpful for beginners.",2026-05-07
+2,"Stock watchlist disappears","My saved watchlist vanished after the latest update.",2026-05-08
+1,"KYC approved then reverted","My account showed verified, then suddenly asked for documents again.",2026-05-09
+3,"Could be better for advanced users","Works fine for investing, but charting and order detail for stocks are basic.",2026-05-11
+2,"UPI collect request times out","By the time the collect request appears, the session often expires.",2026-05-13
+1,"SIP created twice","I tapped once but two SIPs were created for the same fund.",2026-05-14
+4,"Helpful all-in-one portfolio view","It is nice to see funds and stocks together without extra setup.",2026-05-16
+2,"Dividend payout not reflected","Received dividend in bank but portfolio summary did not update for a day.",2026-05-17
+1,"Redeemed units but money missing","Redemption shows successful but bank account has not been credited.",2026-05-19
+3,"Need clearer risk labels","Some funds still feel hard to compare unless you already know the terms.",2026-05-21
+5,"Fast account opening","I was able to create my account and complete the basic steps quickly.",2026-05-22
+2,"Face verification loops forever","The selfie verification screen keeps restarting at the last step.",2026-05-23
+1,"Order failed during market hours","Tried multiple times to buy stock and all attempts failed while the market was open.",2026-05-24
+4,"Good SIP reminders","Reminder timing is useful and helps me keep funds ready.",2026-05-26
+2,"Statement PDF password confusion","The app never clearly explains which password to use for downloaded statements.",2026-05-27
+5,"Resolved issue on first call","Support agent actually solved my mandate issue on the first call.",2026-05-29
+1,"Wrong portfolio value","Today's portfolio valuation was way off compared to yesterday's closing.",2026-05-31
+3,"Needs dark mode","Everything works okay, but late-night usage is harsh on the eyes.",2026-06-01
+2,"Too many promotional pushes","Most notifications are about offers and trending stocks, not my investments.",2026-06-02
+1,"Bank account verification pending forever","Added bank account five days ago and it is still under verification.",2026-06-03
+2,"Order history missing filters","Hard to find old transactions because there are no useful filters.",2026-06-04
+4,"Simple and beginner friendly","I like that the app does not overwhelm first-time investors.",2026-06-05
+1,"Failed SIP with no alert","SIP failed this month and I only noticed after checking manually.",2026-06-05
+3,"Customer support improved","Response time seems better now, but issue tracking still needs work.",2026-06-06
+2,"App update broke login once","After update, I got stuck at OTP verification for 20 minutes.",2026-06-06
+1,"Sell order placed but not visible","I placed a sell order and it never appeared in the order book.",2026-06-07
+4,"Neat goal-based investing ideas","The goal suggestions make it easier to think beyond random investing.",2026-06-07
+2,"Can't stop SIP fully","Pause works unpredictably and cancelling needs too many steps.",2026-06-08
+1,"Refund timeline not visible","If payment fails, the app should show exactly when the refund will come.",2026-06-08
+3,"Good app, poor disclosures placement","Important details are there, but buried under too many taps.",2026-06-09
+5,"Really easy for salaried users","Started monthly SIPs in minutes and tracking is very straightforward.",2026-06-09
