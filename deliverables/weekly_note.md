@@ -1,22 +1,34 @@
 EMAIL OPENING SUMMARY
-This week's Groww review pulse highlights KYC/onboarding issues as the main signal, with users facing significant pain points due to document upload failures and verification delays.
-The biggest user pain point revolves around the inefficiencies in the KYC process, with 23 reviews citing problems with verification and document uploads.
-To address this, our recommended focus for the week is to implement a more robust KYC verification process to reduce delays and failures.
+The main signal from this week's Groww review pulse is that users are experiencing significant pain points with KYC/onboarding, withdrawals, and payments/refunds.
+The biggest user pain point is the consistent issues with the KYC process, including document upload failures and verification problems, which are causing frustration and delays.
+This week, our recommended focus should be on improving the document upload process and enhancing the verification process to reduce failures and waiting time.
 
 WEEKLY GROWW PULSE
 [2026-06-08 to 2026-06-14]
 
 TOP THEMES
-- KYC/Onboarding (23 reviews): Users are facing issues with the KYC process, including document upload failures and verification delays.
-- Payments/Refunds (20 reviews): Customers are experiencing problems with payments, such as failed transactions, missing refunds, and unclear refund timelines.
-- Statements/Reports (15 reviews): Users are finding it difficult to understand and download their account statements, with some requesting clearer risk labels and consolidated statements.
+- KYC/Onboarding (6 reviews): Users are facing issues with the KYC process, including document upload failures and verification problems
+- Withdrawals (7 reviews): Users are experiencing issues with withdrawals, including delayed or missing payouts
+- Payments/Refunds (5 reviews): Users are facing issues with payments and refunds, including failed transactions and missing refunds
 
 QUOTES
-1. "PAN verification passes but address verification fails every time."
-2. "The cancellation option is hard to find and the app still shows next debit."
-3. "Redemption completed in the app but payout is still pending."
+1. "Document upload reached 100 percent and then failed three times"
+2. "PAN verification passes but address verification fails every time"
+3. "Scheduled video KYC, waited 1 hour, no one showed up"
+4. "Redemption completed in the app but payout is still pending"
+5. "Tried to withdraw from liquid fund and app only says request failed"
+6. "Requested Rs.50,000 withdrawal. Money not credited. No proper update in app"
+7. "UPI payment successful but fund order failed. No refund yet"
+8. "Amount got debited for a fund order but there is no allotment and no refund update"
+9. "I started sip and then cancel it with profit of 9 percent . I also applied for refund . but no refund occur even after a week"
 
 ACTION IDEAS
-1. Implement a more robust KYC verification process to reduce delays and failures.
-2. Enhance the payment system to minimize failed transactions and provide clear refund timelines.
-3. Redesign the statement download feature to offer consolidated statements and clearer risk labels.
+1. Improve the document upload process to reduce failures
+2. Enhance the verification process to reduce waiting time
+3. Provide clear instructions for the KYC process
+4. Improve the withdrawal process to reduce delays
+5. Provide clear updates on the status of withdrawals
+6. Enhance the customer support for withdrawal-related issues
+7. Improve the payment process to reduce failures
+8. Enhance the refund process to reduce delays
+9. Provide clear updates on the status of refunds
