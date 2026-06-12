@@ -507,9 +507,26 @@
           <div class="preview-item"><span class="preview-bullet">4</span><span>Praise for new portfolio analytics</span><span class="tag">96 ↑</span></div>
           <div class="preview-item"><span class="preview-bullet">5</span><span>Biometric login rollout reception</span><span class="tag">71 ↑</span></div>
         </div>
+        </div>
+        <button id="review-draft-btn" class="btn secondary" style="display: none; margin-top: 16px; width: 100%; border: 1px solid var(--border);">Review Draft</button>
       </div>
     </aside>
   </main>
+</div>
+
+<!-- Modal for Review Draft -->
+<div id="draft-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
+    <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; font-size: 16px; font-weight: 500;">Email Draft</h3>
+      <button id="close-draft-btn" style="background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div style="padding: 20px; overflow-y: auto; flex: 1;">
+      <pre id="draft-content" style="white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.5; color: var(--text); margin: 0;"></pre>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -534,6 +551,21 @@ function toggleTheme() {
 try { applyTheme(localStorage.getItem(THEME_KEY) || 'light'); } catch (e) {}
 document.getElementById('theme-toggle-login').addEventListener('click', toggleTheme);
 document.getElementById('theme-toggle-dash').addEventListener('click', toggleTheme);
+
+// ---------- Modal Logic ----------
+const draftModal = document.getElementById('draft-modal');
+const reviewDraftBtn = document.getElementById('review-draft-btn');
+const closeDraftBtn = document.getElementById('close-draft-btn');
+
+reviewDraftBtn.addEventListener('click', () => {
+  draftModal.style.display = 'flex';
+});
+closeDraftBtn.addEventListener('click', () => {
+  draftModal.style.display = 'none';
+});
+draftModal.addEventListener('click', (e) => {
+  if (e.target === draftModal) draftModal.style.display = 'none';
+});
 
 // ---------- screen routing ----------
 const screens = {
@@ -713,6 +745,9 @@ async function generateAndSendPulse(email) {
   
   if (result.note) {
     updatePreviewBox(result);
+    // Populate and show Review Draft button
+    document.getElementById('draft-content').textContent = "Subject: Groww Weekly Review Pulse\n\nHi,\n\n" + (result.opening || "") + "\n\nHere is the weekly review pulse for Groww:\n\n" + result.note + "\n\nGenerated automatically - Project prototype. No PII included.";
+    document.getElementById('review-draft-btn').style.display = 'block';
   }
   
   return result;

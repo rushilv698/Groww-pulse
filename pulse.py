@@ -243,15 +243,40 @@ def save_draft(subject, opening_summary, weekly_note, path="draft_email.txt"):
 
 def send_email(weekly_note, opening_summary, override_recipient=None):
     subject = "Groww Weekly Review Pulse - " + pd.Timestamp.now().strftime("%Y-%m-%d")
-    body = f"""
-    <p>Hi,</p>
-    <p>{opening_summary.replace(chr(10), '<br>')}</p>
-    <p>Here is the weekly review pulse for Groww:</p>
-    <pre>{weekly_note}</pre>
-    <p><i>Generated automatically - Project prototype. No PII included.</i></p>
-    """
+    body = f"""Hi,
+
+{opening_summary}
+
+Here is the weekly review pulse for Groww:
+
+{weekly_note}
+
+Generated automatically - Project prototype. No PII included.
+"""
 
     recipient = override_recipient or RECIPIENT_EMAIL
+    
+    resend_key = os.getenv("RESEND_API_KEY")
+    if resend_key:
+        try:
+            import resend
+            resend.api_key = resend_key
+            # Note: By default, Resend limits sending to 'onboarding@resend.dev' until you verify a domain.
+            from_email = os.getenv("RESEND_FROM_EMAIL", "onboarding@resend.dev")
+            
+            r = resend.Emails.send({
+                "from": from_email,
+                "to": recipient,
+                "subject": subject,
+                "text": body
+            })
+            print(f"Email sent successfully via Resend. ID: {r.get('id')}")
+            return
+        except Exception as exc:
+            print(f"Failed to send email via Resend: {exc}")
+            save_draft(subject, opening_summary, weekly_note)
+            return
+
     if not all([SMTP_SERVER, SMTP_PORT, SENDER_EMAIL, SENDER_PASSWORD, recipient]):
         print("Email credentials are incomplete. Saving a local draft instead.")
         save_draft(subject, opening_summary, weekly_note)
@@ -261,7 +286,7 @@ def send_email(weekly_note, opening_summary, override_recipient=None):
     msg["From"] = SENDER_EMAIL
     msg["To"] = recipient
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "html"))
+    msg.attach(MIMEText(body, "plain"))
 
     try:
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
@@ -269,9 +294,9 @@ def send_email(weekly_note, opening_summary, override_recipient=None):
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, recipient, msg.as_string())
         server.quit()
-        print("Email sent successfully.")
+        print("Email sent successfully via SMTP.")
     except Exception as exc:
-        print(f"Failed to send email: {exc}")
+        print(f"Failed to send email via SMTP: {exc}")
         save_draft(subject, opening_summary, weekly_note)
 
 
