@@ -8,6 +8,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
+from pydantic import BaseModel, Field
+from typing import List
 
 load_dotenv()
 
@@ -109,18 +111,41 @@ def select_exact_quotes(reviews_df, quote_count=3):
 
     return selected_quotes[:quote_count]
 
+class ReviewQuote(BaseModel):
+    quote: str = Field(description="Exact verbatim quote from a user review")
+    stars: int = Field(description="Star rating of the review (1-5)")
+    date: str = Field(description="Date of the review in YYYY-MM-DD format")
 
-def enforce_exact_quotes(weekly_note, reviews_df):
-    quotes = select_exact_quotes(reviews_df)
-    quotes_block = "QUOTES\n" + "\n".join(
-        f'{index}. "{quote}"' for index, quote in enumerate(quotes, start=1)
-    )
-    return re.sub(
-        r"QUOTES\n(?:\d+\.\s+\".*?\"\n?){1,3}",
-        quotes_block + "\n",
-        weekly_note,
-        flags=re.DOTALL,
-    ).strip()
+class Theme(BaseModel):
+    name: str = Field(description="Name of the theme (e.g. KYC/Onboarding)")
+    volume: int = Field(description="Number of reviews in this theme")
+    summary: str = Field(description="One-sentence summary of the theme")
+    action_ideas: List[str] = Field(description="3 actionable ideas for the product team based on this theme")
+    quotes: List[ReviewQuote] = Field(description="3 exact user quotes belonging to this theme")
+
+class PulseReport(BaseModel):
+    themes: List[Theme] = Field(description="Top 3 themes by review volume")
+
+def format_report_to_text(report: PulseReport, date_range: str) -> str:
+    lines = [f"WEEKLY GROWW PULSE\n[{date_range}]\n", "TOP THEMES"]
+    for t in report.themes:
+        lines.append(f"- {t.name} ({t.volume} reviews): {t.summary}")
+    
+    lines.append("\nQUOTES")
+    quote_idx = 1
+    for t in report.themes:
+        for q in t.quotes:
+            lines.append(f"{quote_idx}. \"{q.quote}\"")
+            quote_idx += 1
+            
+    lines.append("\nACTION IDEAS")
+    idea_idx = 1
+    for t in report.themes:
+        for idea in t.action_ideas:
+            lines.append(f"{idea_idx}. {idea}")
+            idea_idx += 1
+            
+    return "\n".join(lines)
 
 
 def generate_weekly_note(reviews_df):
@@ -139,37 +164,13 @@ You are a product analyst for the Groww app. Analyze the following recent App St
 Rules:
 - You are receiving {review_count} reviews from {date_range}.
 - First cluster the reviews into up to 5 themes internally.
-- In the final note, show exactly the top 3 themes by review count.
-- Do not show Theme 4 or Theme 5 in the final note.
-- If the review volume is small, use fewer than 5 themes rather than inventing extra categories.
-- Use ONLY these specific 5 product themes: KYC/Onboarding, Payments/Refunds, Withdrawals, Statements/Reports.
-- Do not use broad umbrella themes such as Technical Issues, User Experience, or General Feedback.
-- For each theme, include the count of reviews that belong to it.
-- Select three distinct, real user quotes taken exactly from the review text.
-- Propose three actionable ideas the product team could implement this week.
-- Keep the entire note under 250 words.
+- Output the top 3 themes by review count.
+- Use ONLY these specific 5 product themes: KYC/Onboarding, Payments/Refunds, Withdrawals, Statements/Reports, Customer Support.
+- For each theme, calculate the volume of reviews that belong to it.
+- For each theme, select exactly 3 distinct, real user quotes taken EXACTLY from the review text. Include their star rating and date.
+- For each theme, propose exactly 3 actionable ideas the product team could implement this week.
 - Do not include any personally identifiable information.
-- Preserve the output format exactly.
 - Base the analysis only on the reviews provided.
-
-Output format:
-WEEKLY GROWW PULSE
-[{date_range}]
-
-TOP THEMES
-- Theme Name (X reviews): one-sentence summary
-- Theme Name (X reviews): one-sentence summary
-- Theme Name (X reviews): one-sentence summary
-
-QUOTES
-1. "Exact user quote 1"
-2. "Exact user quote 2"
-3. "Exact user quote 3"
-
-ACTION IDEAS
-1. Action item 1
-2. Action item 2
-3. Action item 3
 
 REVIEWS:
 {reviews}
@@ -181,8 +182,12 @@ REVIEWS:
         review_count=review_count,
         reviews=reviews_text,
     )
-    response = get_llm().invoke(formatted_prompt)
-    return enforce_exact_quotes(response.content.strip(), reviews_df)
+    
+    llm = get_llm().with_structured_output(PulseReport)
+    report = llm.invoke(formatted_prompt)
+    
+    text_note = format_report_to_text(report, date_range)
+    return text_note, report
 
 
 def save_weekly_note(weekly_note, opening_summary, path="weekly_note.md"):
@@ -302,16 +307,15 @@ Generated automatically - Project prototype. No PII included.
 
 def run_pulse(recipient_email=None):
     df = load_reviews()
-    weekly_note = generate_weekly_note(df)
+    weekly_note, report_json = generate_weekly_note(df)
     opening_summary = build_email_opening(weekly_note)
     save_weekly_note(weekly_note, opening_summary)
     send_email(weekly_note, opening_summary, override_recipient=recipient_email)
-    return weekly_note, opening_summary, len(df)
-
+    return weekly_note, opening_summary, len(df), report_json.model_dump()
 
 def main():
     df = load_reviews()
-    weekly_note = generate_weekly_note(df)
+    weekly_note, report_json = generate_weekly_note(df)
     opening_summary = build_email_opening(weekly_note)
     print("=== WEEKLY NOTE ===")
     print(weekly_note)

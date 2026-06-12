@@ -110,6 +110,37 @@
   }
   .foot { padding: 22px; border-top: 1px solid var(--border); margin-top: auto; }
 
+  /* ===================== DETAILED DASHBOARD ===================== */
+  #detailed-report {
+    max-width: 1400px; margin: 40px auto; padding: 0 26px;
+    animation: fade-in 0.5s ease-out;
+  }
+  .section-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
+  .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .theme-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+    box-shadow: var(--shadow-soft); display: flex; flex-direction: column; gap: 16px;
+  }
+  .theme-header { display: flex; flex-direction: column; gap: 6px; }
+  .theme-title-row { display: flex; align-items: center; justify-content: space-between; }
+  .theme-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+  .theme-vol { font-size: 12px; font-weight: 600; color: var(--green-dark); background: var(--green-tint); padding: 4px 8px; border-radius: 999px; }
+  .theme-summary { font-size: 14px; color: var(--muted); line-height: 1.5; }
+  
+  .ideas-section { margin-top: auto; }
+  .ideas-title { font-size: 12px; font-weight: 700; color: #8A63D2; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .ideas-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  .ideas-list li { font-size: 13.5px; color: var(--secondary); display: flex; gap: 8px; line-height: 1.4; }
+  .ideas-list li::before { content: "•"; color: #8A63D2; }
+  
+  .quotes-section { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .quote-card { background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 6px; border-left: 3px solid var(--green); }
+  .quote-text { font-size: 13px; color: var(--ink); line-height: 1.4; font-style: italic; }
+  .quote-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--faint); font-weight: 500; }
+  .stars { color: #facc15; font-size: 12px; letter-spacing: 1px; }
+
+  @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
   /* ===================== LOGIN ===================== */
   .nav {
     display: flex; align-items: center; justify-content: space-between;
@@ -514,6 +545,12 @@
   </main>
 </div>
 
+<!-- Detailed Dashboard Container -->
+<div id="detailed-report" style="display: none;">
+  <h2 class="section-title">Deep Dive: Top Themes</h2>
+  <div class="theme-grid" id="theme-grid-container"></div>
+</div>
+
 <!-- Modal for Review Draft -->
 <div id="draft-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
   <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
@@ -748,9 +785,69 @@ async function generateAndSendPulse(email) {
     // Populate and show Review Draft button
     document.getElementById('draft-content').textContent = "Subject: Groww Weekly Review Pulse\n\nHi,\n\n" + (result.opening || "") + "\n\nHere is the weekly review pulse for Groww:\n\n" + result.note + "\n\nGenerated automatically - Project prototype. No PII included.";
     document.getElementById('review-draft-btn').style.display = 'block';
+    
+    // Render Detailed Dashboard if structured data is present
+    if (result.structured_data && result.structured_data.themes) {
+      renderDetailedReport(result.structured_data);
+    }
   }
   
   return result;
+}
+
+function renderDetailedReport(data) {
+  const container = document.getElementById('detailed-report');
+  const grid = document.getElementById('theme-grid-container');
+  grid.innerHTML = ''; // Clear previous
+  
+  data.themes.forEach(theme => {
+    // Build Quotes HTML
+    const quotesHtml = theme.quotes.map(q => `
+      <div class="quote-card">
+        <div class="quote-text">"${escapeHtml(q.quote)}"</div>
+        <div class="quote-meta">
+          <span class="stars">${'★'.repeat(q.stars)}${'☆'.repeat(5 - q.stars)}</span>
+          <span>${escapeHtml(q.date)}</span>
+        </div>
+      </div>
+    `).join('');
+    
+    // Build Ideas HTML
+    const ideasHtml = theme.action_ideas.map(idea => `<li>${escapeHtml(idea)}</li>`).join('');
+    
+    // Build Card HTML
+    const cardHtml = `
+      <div class="theme-card">
+        <div class="theme-header">
+          <div class="theme-title-row">
+            <span class="theme-title">${escapeHtml(theme.name)}</span>
+            <span class="theme-vol">${theme.volume} reviews</span>
+          </div>
+          <div class="theme-summary">${escapeHtml(theme.summary)}</div>
+        </div>
+        
+        <div class="quotes-section">
+          ${quotesHtml}
+        </div>
+        
+        <div class="ideas-section">
+          <div class="ideas-title">ACTION IDEAS</div>
+          <ul class="ideas-list">
+            ${ideasHtml}
+          </ul>
+        </div>
+      </div>
+    `;
+    
+    grid.innerHTML += cardHtml;
+  });
+  
+  container.style.display = 'block';
+  
+  // Smooth scroll down to the dashboard
+  setTimeout(() => {
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 
 function updatePreviewBox(result) {

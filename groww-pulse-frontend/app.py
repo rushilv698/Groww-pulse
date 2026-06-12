@@ -48,9 +48,9 @@ def pulse():
 
     try:
         # === PLUG IN YOUR BACKEND HERE ===
-        summary, opening, count = run_pulse(recipient_email=email)
+        summary, opening, count, structured_data = run_pulse(recipient_email=email)
         # =================================
-        return jsonify({"ok": True, "email": email, "note": summary, "opening": opening, "count": count})
+        return jsonify({"ok": True, "email": email, "note": summary, "opening": opening, "count": count, "structured_data": structured_data})
     except Exception as e:
         import traceback
         traceback.print_exc()
