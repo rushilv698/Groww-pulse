@@ -693,7 +693,7 @@ sendBtn.addEventListener('click', async () => {
   setStatus('loading', 'Analyzing reviews and drafting email…');
   try {
     const result = await generateAndSendPulse(email);
-    setStatus('success', `Pulse sent to <b>${escapeHtml(email)}</b>. Check your inbox in a minute.`, result);
+    setStatus('success', `Pulse sent to <b>${escapeHtml(email)}</b>. Check your inbox (or spam folder) in a minute.`, result);
   } catch (err) {
     setStatus('error', `Something went wrong: ${escapeHtml(err && err.message || String(err))}`);
     sendBtn.disabled = false;
